@@ -15,7 +15,6 @@ import coil.compose.rememberImagePainter
 import com.example.taller1compumovil.model.User
 import com.example.taller1compumovil.viewmodel.UserViewModel
 import androidx.navigation.NavController
-import com.google.gson.Gson
 import androidx.compose.ui.unit.dp
 import coil.compose.rememberAsyncImagePainter
 
