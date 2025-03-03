@@ -1,34 +1,39 @@
-package com.example.taller1compumovil.ui 
+package com.example.taller1compumovil.ui
 
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.Image
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-//noinspection UsingMaterialAndMaterial3Libraries
 import androidx.compose.material.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.unit.dp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import coil.compose.rememberImagePainter
 import com.example.taller1compumovil.model.User
 import com.example.taller1compumovil.viewmodel.UserViewModel
+import androidx.navigation.NavController
+import com.google.gson.Gson
+import androidx.compose.ui.unit.dp
+import coil.compose.rememberAsyncImagePainter
+
+
 
 @OptIn(ExperimentalFoundationApi::class)
 @Composable
-fun UserListScreen(userViewModel: UserViewModel = viewModel()) {
+fun UserListScreen(navController: NavController, userViewModel: UserViewModel = viewModel()) {
     val users by userViewModel.users
+
     Scaffold(topBar = { TopAppBar(title = { Text("Lista de Usuarios") }) }) { paddingValues ->
         if (users.isEmpty()) {
             CircularProgressIndicator(modifier = Modifier.fillMaxSize())
         } else {
             LazyColumn(
                 state = rememberLazyListState(),
-                modifier = Modifier.padding(paddingValues)  // ⬅️ Solución aquí
+                modifier = Modifier.padding(paddingValues)
             ) {
-                // StickyHeader con el total de usuarios
                 stickyHeader {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
@@ -42,9 +47,11 @@ fun UserListScreen(userViewModel: UserViewModel = viewModel()) {
                         )
                     }
                 }
-                // Lista de usuarios
+
                 items(users) { user ->
-                    UserItem(user)
+                    UserItem(user) {
+                        navController.navigate("userDetail/${user.id}")
+                    }
                 }
             }
         }
@@ -52,16 +59,17 @@ fun UserListScreen(userViewModel: UserViewModel = viewModel()) {
 }
 
 @Composable
-fun UserItem(user: User) {
+fun UserItem(user: User, onClick: () -> Unit) {
     Card(
         modifier = Modifier
             .fillMaxWidth()
-            .padding(8.dp),
+            .padding(8.dp)
+            .clickable { onClick() },  // ⬅️ Navega al hacer clic
         elevation = 4.dp
     ) {
         Row(modifier = Modifier.padding(16.dp)) {
             Image(
-                painter = rememberImagePainter(user.image),
+                painter = rememberAsyncImagePainter(user.image),
                 contentDescription = "Imagen de perfil",
                 modifier = Modifier.size(50.dp)
             )

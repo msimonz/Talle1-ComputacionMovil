@@ -7,8 +7,19 @@ data class User(
     val firstName: String,
     val lastName: String,
     val image: String,
-    val company: Company
+    val phone: String,
+    val email: String,
+    val gender: String,
+    val address: Address,
+    val company: Company,
+    val domain: String,
+    val ip: String,
+    val university: String
 )
 
+data class Address(
+    val city: String,
+    val state: String
+)
 data class Company(val name: String)
 
