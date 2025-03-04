@@ -4,10 +4,8 @@ import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.lifecycle.viewmodel.compose.viewModel
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.MaterialTheme
-//noinspection UsingMaterialAndMaterial3Libraries
-import androidx.compose.material.Surface
+import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Surface
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.rememberNavController
 import androidx.navigation.compose.composable
@@ -16,15 +14,17 @@ import com.example.taller1compumovil.ui.UserDetailScreen
 import com.example.taller1compumovil.viewmodel.UserViewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
+import com.example.taller1compumovil.ui.theme.Taller1CompumovilTheme
+import androidx.appcompat.app.AppCompatDelegate
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
         setContent {
-            val navController = rememberNavController()
-            val userViewModel: UserViewModel = viewModel() // ⬅️ Inicializar el ViewModel
-
-            MaterialTheme {
+            Taller1CompumovilTheme {
+                val navController = rememberNavController()
+                val userViewModel: UserViewModel = viewModel() // ⬅️ Inicializar el ViewModel
                 Surface {
                     NavHost(navController = navController, startDestination = "userList") {
                         composable("userList") {
