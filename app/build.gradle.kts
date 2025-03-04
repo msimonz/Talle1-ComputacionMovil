@@ -69,7 +69,7 @@ dependencies {
     implementation("androidx.compose.material3:material3:1.2.0")
     implementation ("androidx.appcompat:appcompat:1.5.1") // Asegúrate de tener AppCompat
     implementation ("com.google.android.material:material:1.8.0")  // Asegúrate de tener Material Components
-    implementation ("androidx.compose.material3:material3:1.1.2")
+    implementation ("androidx.compose.material3:material3:1.0.0")
     // Retrofit para consumir la API
     implementation ("com.squareup.retrofit2:retrofit:2.9.0")
     implementation ("com.squareup.retrofit2:converter-gson:2.9.0")
