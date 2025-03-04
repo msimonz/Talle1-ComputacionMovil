@@ -7,7 +7,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.material.*
+import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -20,9 +20,14 @@ import coil.compose.rememberAsyncImagePainter
 
 
 
-@OptIn(ExperimentalFoundationApi::class)
+@OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
-fun UserListScreen(navController: NavController, userViewModel: UserViewModel = viewModel()) {
+fun UserListScreen(
+    navController: NavController,
+    userViewModel: UserViewModel = viewModel(),
+    isDarkTheme: Boolean,
+    onThemeToggle: (Boolean) -> Unit
+) {
     val users by userViewModel.users
 
     Scaffold(topBar = { TopAppBar(title = { Text("Lista de Usuarios") }) }) { paddingValues ->
@@ -36,14 +41,28 @@ fun UserListScreen(navController: NavController, userViewModel: UserViewModel = 
                 stickyHeader {
                     Surface(
                         modifier = Modifier.fillMaxWidth(),
-                        color = MaterialTheme.colors.primary
+                        color = MaterialTheme.colorScheme.primary
                     ) {
-                        Text(
-                            text = "Total de usuarios: ${users.size}",
-                            modifier = Modifier.padding(16.dp),
-                            style = MaterialTheme.typography.h6,
-                            color = MaterialTheme.colors.onPrimary
-                        )
+                        Row(
+                            modifier = Modifier
+                                .fillMaxWidth()
+                                .padding(16.dp),
+                            horizontalArrangement = Arrangement.SpaceBetween
+                        ) {
+                            Text(
+                                text = "Total de usuarios: ${users.size}",
+                                style = MaterialTheme.typography.headlineSmall, // ✅ Corregido
+                                color = MaterialTheme.colorScheme.onPrimary
+                            )
+                            Switch(
+                                checked = isDarkTheme,
+                                onCheckedChange = { onThemeToggle(it) },
+                                colors = SwitchDefaults.colors(
+                                    checkedThumbColor = MaterialTheme.colorScheme.secondary,
+                                    uncheckedThumbColor = MaterialTheme.colorScheme.onPrimary
+                                )
+                            )
+                        }
                     }
                 }
 
@@ -64,7 +83,7 @@ fun UserItem(user: User, onClick: () -> Unit) {
             .fillMaxWidth()
             .padding(8.dp)
             .clickable { onClick() },  // ⬅️ Navega al hacer clic
-        elevation = 4.dp
+        elevation = CardDefaults.cardElevation(defaultElevation = 4.dp) // ✅ Material 3 usa `CardDefaults`
     ) {
         Row(modifier = Modifier.padding(16.dp)) {
             Image(
@@ -74,8 +93,8 @@ fun UserItem(user: User, onClick: () -> Unit) {
             )
             Spacer(modifier = Modifier.width(16.dp))
             Column {
-                Text(text = "${user.firstName} ${user.lastName}", style = MaterialTheme.typography.h6)
-                Text(text = "Empresa: ${user.company.name}", style = MaterialTheme.typography.body2)
+                Text(text = "${user.firstName} ${user.lastName}", style = MaterialTheme.typography.headlineSmall) // ✅ Corregido
+                Text(text = "Empresa: ${user.company.name}", style = MaterialTheme.typography.bodyMedium) // ✅ Corregido
             }
         }
     }

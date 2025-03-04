@@ -15,20 +15,24 @@ import com.example.taller1compumovil.viewmodel.UserViewModel
 import androidx.navigation.NavType
 import androidx.navigation.navArgument
 import com.example.taller1compumovil.ui.theme.Taller1CompumovilTheme
-import androidx.appcompat.app.AppCompatDelegate
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 
 class MainActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        AppCompatDelegate.setDefaultNightMode(AppCompatDelegate.MODE_NIGHT_YES)
+
         setContent {
-            Taller1CompumovilTheme {
+            var isDarkTheme by rememberSaveable { mutableStateOf(false) } // Ahora el estado se guarda
+
+            Taller1CompumovilTheme(darkTheme = isDarkTheme) {
                 val navController = rememberNavController()
-                val userViewModel: UserViewModel = viewModel() // ⬅️ Inicializar el ViewModel
+                val userViewModel: UserViewModel = viewModel() // Inicializar el ViewModel
+
                 Surface {
                     NavHost(navController = navController, startDestination = "userList") {
                         composable("userList") {
-                            UserListScreen(navController, userViewModel) // ⬅️ Pasar ViewModel
+                            UserListScreen(navController, userViewModel, isDarkTheme) { isDarkTheme = it }
                         }
                         composable(
                             "userDetail/{userId}",
@@ -36,7 +40,7 @@ class MainActivity : ComponentActivity() {
                         ) { backStackEntry ->
                             val userId = backStackEntry.arguments?.getInt("userId") ?: return@composable
                             val user = userViewModel.users.value.find { it.id == userId }
-                            user?.let { UserDetailScreen(it) } // ⬅️ Solo mostrar si el usuario existe
+                            user?.let { UserDetailScreen(it) } // Solo mostrar si el usuario existe
                         }
                     }
                 }
